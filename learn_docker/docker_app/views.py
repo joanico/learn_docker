@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from .models import Blog, Author
 
-
-def simple_view(request):
-    data = {"content": "Gfg is the best"}
-    return render(request, "learn_docker/index.html", data)
+def blog_list(request):
+    blogs = Blog.objects.all()
+    context = {'blogs': blogs}
+    return render(request, 'learn_docker/blog_list.html', {'blogs': blogs})

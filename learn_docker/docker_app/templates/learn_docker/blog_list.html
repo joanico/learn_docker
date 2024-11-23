@@ -1,0 +1,12 @@
+{% extends 'learn_docker/index.html' %}
+
+{% block content %}
+    <h3>Blogs</h3>
+    <ul>
+    {% for blog in blogs %}
+        <li>Titlu: {{ blog.name }}</li>
+        <li>Tag: {{ blog.tagline }}</li>
+        <li>Autor: {{ blog.author }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

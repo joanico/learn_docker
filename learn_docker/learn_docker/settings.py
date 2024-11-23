@@ -77,18 +77,13 @@ WSGI_APPLICATION = "learn_docker.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-if os.environ.get("IS_DOCKER"):  # Check for a Docker environment variable.
-    DATABASE_HOST = "db"
-else:
-    DATABASE_HOST = "127.0.0.1"  # Or localhost
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get("POSTGRES_DB"),
         'USER': os.environ.get("POSTGRES_USER"),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        'HOST': DATABASE_HOST,
+        'HOST': 'db',
         'PORT': 5432,
     }
 }
@@ -134,3 +129,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+try:
+    from .local_settings import *  # Import everything from local_settings
+except ImportError:
+    pass  # Ignore import error if local_settings doesn't exist (e.g., on production)
+

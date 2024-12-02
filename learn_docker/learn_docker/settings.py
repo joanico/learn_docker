@@ -27,10 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-)!^p+ww!_l=7e359zip3#7mn!lmt3+$mbh@xy7gs#@qxh6$03w"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", True)  
 
-ALLOWED_HOSTS = []
-
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]  # Allow all hosts in development
+else:
+    ALLOWED_HOSTS = ["127.0.0.1", "[::1]"]
 
 # Application definition
 
@@ -80,14 +82,13 @@ WSGI_APPLICATION = "learn_docker.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("POSTGRES_DB"),
-        'USER': os.environ.get("POSTGRES_USER"),
-        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        'HOST': 'db',
-        'PORT': 5432,
+        'NAME': 'learndocker_db',
+        'USER': os.environ.get('DJANGO_USER'),
+        'PASSWORD': os.environ.get('DJANGO_PASSWORD'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', 'db'),
+        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -129,9 +130,3 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-try:
-    from .local_settings import *  # Import everything from local_settings
-except ImportError:
-    pass  # Ignore import error if local_settings doesn't exist (e.g., on production)
-

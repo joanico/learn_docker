@@ -1,14 +1,6 @@
 version: '3.4'
 
 services:
-  db:
-    image: postgres:14.5
-    restart: always
-    ports:
-      - "5433:5432"
-    env_file:
-      - .env
-
   learndocker:
     image: learndocker
     build:
@@ -16,8 +8,24 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 8000:8000
-
+    environment:
+      - DJANGO_USER=${DJANGO_USER}
+      - DJANGO_PASSWORD=${DJANGO_PASSWORD}
+      - DJANGO_HOST=db:5432
     depends_on:  # Ensure db starts before learndocker
       - db
-    env_file:
-      - .env
+
+  db:
+    image: postgres:14.5
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=niko
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
